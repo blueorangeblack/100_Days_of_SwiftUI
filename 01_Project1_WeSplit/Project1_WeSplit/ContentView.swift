@@ -15,31 +15,30 @@ struct ContentView: View {
     
     let tipPercentages = [10, 15, 20, 25, 0]
     
-    var totalPerPerson: Double {
-        let peopleCount = Double(numberOfPeople + 2)
+    var grandTotal: Double {
         let tipSelection = Double(tipPercentage)
-        
         let tipValue = checkAmount / 100 * tipSelection
         let grandTotal = checkAmount + tipValue
         
+        return grandTotal
+    }
+    
+    var totalPerPerson: Double {
+        let peopleCount = Double(numberOfPeople + 2)
         let amountPerPerson = grandTotal / peopleCount
         
         return amountPerPerson
     }
+
+    var currencyFormat = FloatingPointFormatStyle<Double>.Currency.init(code: Locale.current.currencyCode ?? "USD")
     
     var body: some View {
         NavigationView {
             Form {
                 Section {
-                    //X
-                    //TextField("Amount", text: $checkAmount)
-                    //Cannot convert value of type 'Binding<Double>' to expected argument type 'Binding<String>'
-                    
-                    //TextField("Amount", value: $checkAmount, format: .currency(code: "USD"))
-                    
                     TextField("Amount",
-                              value: $checkAmount, // $ two-way binding
-                              format: .currency(code: Locale.current.currencyCode ?? "USD"))
+                              value: $checkAmount,
+                              format: currencyFormat)
                         .keyboardType(.decimalPad)
                         .focused($amountIsFocused)
                     
@@ -52,18 +51,24 @@ struct ContentView: View {
                 
                 Section {
                     Picker("Tip percentage", selection: $tipPercentage) {
-                        ForEach (tipPercentages, id: \.self) {
+                        ForEach(0..<101) {
                             Text($0, format: .percent)
                         }
                     }
-                    .pickerStyle(.segmented)
                 } header: {
                     Text("How much tip do you wnat to leave?")
                 }
                 
+                Section {
+                    Text(grandTotal, format: currencyFormat)
+                } header: {
+                    Text("total amount for the check")
+                }
                 
                 Section {
-                    Text(totalPerPerson, format: .currency(code: Locale.current.currencyCode ?? "USD"))
+                    Text(totalPerPerson, format: currencyFormat)
+                } header: {
+                    Text("Amount per person")
                 }
             }
             .navigationTitle("WeSplit")
@@ -72,7 +77,6 @@ struct ContentView: View {
                     Spacer()
                     
                     Button("Done") {
-                        //Done 버튼을 눌렀을 때 실행할 클로저
                         amountIsFocused = false
                     }
                 }
