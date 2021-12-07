@@ -8,47 +8,85 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var showingAlert = false
+    @State private var showingScore = false
+    @State private var scoreTitle = ""
+    
+    @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
+    @State private var correctAnswer = Int.random(in: 0...2)
 
     var body: some View {
-//        ZStack {
-//            VStack(spacing: 0) {
-//                Color.red
-//                Color.blue
-//            }
-//
-//            Text("Your content")
-//                .foregroundColor(.secondary)
-//                .padding(50)
-//                .background(.ultraThinMaterial)
-//        }
-//        .ignoresSafeArea()
-        
-//        RadialGradient(gradient: Gradient(colors: [.blue, .black]), center: .center, startRadius: 20, endRadius: 200)
-        
-//        AngularGradient(gradient: Gradient(colors: [.red, .yellow, .green, .blue, .purple, .red]), center: .center)
-        
-//        VStack {
-//            Button("Button 1") { } .buttonStyle(.bordered)
-//            Button("Button 2", role: .destructive) { }
-//                .buttonStyle(.bordered)
-//            Button("Button 3") { } .buttonStyle(.bordered)
-//                .tint(.mint)
-//            Button("Button 4") { } .buttonStyle(.borderedProminent)
-//            Button("Button 5", role: .destructive) { }
-//                .buttonStyle(.borderedProminent)
-//            Button("Button 6") { } .buttonStyle(.borderedProminent) .tint(.mint)
-//        }
-        
-        Button("Show Alert") {
-            showingAlert = true
+        ZStack {
+            RadialGradient(stops: [
+                .init(color: Color(red: 0.1, green: 0.2, blue: 0.45), location: 0.3),
+                .init(color: Color(red: 0.76, green: 0.15, blue: 0.26), location: 0.3)
+            ], center: .top, startRadius: 200, endRadius: 700)
+                .ignoresSafeArea()
+            
+            VStack {
+                Spacer()
+                
+                Text("Guess the Flag")
+                    //.font(.largeTitle.weight(.bold))
+                    //간단하게 하려면
+                    .font(.largeTitle.bold())
+                    .foregroundColor(.white)
+                
+                VStack(spacing: 15) {
+                    VStack {
+                        Text("Tap the flag of")
+                            .foregroundStyle(.secondary)
+                            .font(.subheadline.weight(.heavy))
+                        Text(countries[correctAnswer])
+                            .font(.largeTitle.weight(.semibold))
+                    }
+                    
+                    ForEach(0..<3) { number in
+                        Button {
+                            flagTapped(number)
+                        } label: {
+                            Image(countries[number])
+                                .renderingMode(.original)
+                                .clipShape(Capsule())
+                                .shadow(radius: 5)
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 20)
+                .background(.regularMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                
+                Spacer()
+                Spacer()
+                
+                Text("Score: ???")
+                    .foregroundColor(.white)
+                    .font(.title.bold())
+                
+                Spacer()
+            }
+            .padding()
         }
-        .alert("Important message", isPresented: $showingAlert) {
-            Button("Delete", role: .destructive) { }
-            Button("Cancel", role: .cancel) { }
+        .alert(scoreTitle, isPresented: $showingScore) {
+            Button("Continue", action: askQuestion)
         } message: {
-            Text("Please read this.")
+            Text("Your score is ???")
         }
+    }
+    
+    func flagTapped(_ number: Int) {
+        if number == correctAnswer {
+            scoreTitle = "Correct"
+        } else {
+            scoreTitle = "Wrong"
+        }
+
+        showingScore = true
+    }
+    
+    func askQuestion() {
+        countries.shuffle()
+        correctAnswer = Int.random(in: 0...2)
     }
 }
 
