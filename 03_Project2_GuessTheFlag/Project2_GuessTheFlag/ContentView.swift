@@ -7,6 +7,31 @@
 
 import SwiftUI
 
+struct FlagImage: View {
+    var name: String
+
+    var body: some View {
+        Image(name)
+            .renderingMode(.original)
+            .clipShape(Capsule())
+            .shadow(radius: 5)
+    }
+}
+
+struct LargeBlueFont: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.largeTitle.bold())
+            .foregroundColor(.blue)
+    }
+}
+
+extension View {
+    func largeBlueFont() -> some View {
+        modifier(LargeBlueFont())
+    }
+}
+
 struct ContentView: View {
     @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
     @State private var correctAnswer = Int.random(in: 0...2)
@@ -34,10 +59,12 @@ struct ContentView: View {
                 Spacer()
                 
                 Text("Guess the Flag")
-                    //.font(.largeTitle.weight(.bold))
-                    //간단하게 하려면
-                    .font(.largeTitle.bold())
-                    .foregroundColor(.white)
+                    .largeBlueFont()
+//                Text("Guess the Flag")
+//                    //.font(.largeTitle.weight(.bold))
+//                    //간단하게 하려면
+//                    .font(.largeTitle.bold())
+//                    .foregroundColor(.white)
                 
                 VStack(spacing: 15) {
                     VStack {
@@ -52,10 +79,11 @@ struct ContentView: View {
                         Button {
                             flagTapped(number)
                         } label: {
-                            Image(countries[number])
-                                .renderingMode(.original)
-                                .clipShape(Capsule())
-                                .shadow(radius: 5)
+                            FlagImage(name: countries[number])
+//                            Image(countries[number])
+//                                .renderingMode(.original)
+//                                .clipShape(Capsule())
+//                                .shadow(radius: 5)
                         }
                     }
                 }
