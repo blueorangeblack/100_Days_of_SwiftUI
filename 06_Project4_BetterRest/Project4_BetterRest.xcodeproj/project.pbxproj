@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1288C8092774DC7900CB8AE7 /* SleepCalculator.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1288C8082774DC7900CB8AE7 /* SleepCalculator.mlmodel */; };
 		12FE374727719FEA0034AC71 /* Project4_BetterRestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FE374627719FEA0034AC71 /* Project4_BetterRestApp.swift */; };
 		12FE374927719FEA0034AC71 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FE374827719FEA0034AC71 /* ContentView.swift */; };
 		12FE374B27719FEB0034AC71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12FE374A27719FEB0034AC71 /* Assets.xcassets */; };
@@ -14,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1288C8082774DC7900CB8AE7 /* SleepCalculator.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = SleepCalculator.mlmodel; sourceTree = "<group>"; };
 		12FE374327719FEA0034AC71 /* Project4_BetterRest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Project4_BetterRest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12FE374627719FEA0034AC71 /* Project4_BetterRestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project4_BetterRestApp.swift; sourceTree = "<group>"; };
 		12FE374827719FEA0034AC71 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -53,6 +55,7 @@
 			children = (
 				12FE374627719FEA0034AC71 /* Project4_BetterRestApp.swift */,
 				12FE374827719FEA0034AC71 /* ContentView.swift */,
+				1288C8082774DC7900CB8AE7 /* SleepCalculator.mlmodel */,
 				12FE374A27719FEB0034AC71 /* Assets.xcassets */,
 				12FE374C27719FEB0034AC71 /* Preview Content */,
 			);
@@ -137,6 +140,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1288C8092774DC7900CB8AE7 /* SleepCalculator.mlmodel in Sources */,
 				12FE374927719FEA0034AC71 /* ContentView.swift in Sources */,
 				12FE374727719FEA0034AC71 /* Project4_BetterRestApp.swift in Sources */,
 			);
