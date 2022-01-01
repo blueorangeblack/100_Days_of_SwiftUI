@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1224CE8B278099460023FA63 /* start.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1224CE8A278099460023FA63 /* start.txt */; };
 		1285084B2779EF6300274A92 /* Project5_WordScrambleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1285084A2779EF6300274A92 /* Project5_WordScrambleApp.swift */; };
 		1285084D2779EF6300274A92 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1285084C2779EF6300274A92 /* ContentView.swift */; };
 		1285084F2779EF6500274A92 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1285084E2779EF6500274A92 /* Assets.xcassets */; };
@@ -14,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1224CE8A278099460023FA63 /* start.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = start.txt; sourceTree = "<group>"; };
 		128508472779EF6300274A92 /* Project5_WordScramble.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Project5_WordScramble.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1285084A2779EF6300274A92 /* Project5_WordScrambleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project5_WordScrambleApp.swift; sourceTree = "<group>"; };
 		1285084C2779EF6300274A92 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -53,6 +55,7 @@
 			children = (
 				1285084A2779EF6300274A92 /* Project5_WordScrambleApp.swift */,
 				1285084C2779EF6300274A92 /* ContentView.swift */,
+				1224CE8A278099460023FA63 /* start.txt */,
 				1285084E2779EF6500274A92 /* Assets.xcassets */,
 				128508502779EF6500274A92 /* Preview Content */,
 			);
@@ -126,6 +129,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				128508522779EF6500274A92 /* Preview Assets.xcassets in Resources */,
+				1224CE8B278099460023FA63 /* start.txt in Resources */,
 				1285084F2779EF6500274A92 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
