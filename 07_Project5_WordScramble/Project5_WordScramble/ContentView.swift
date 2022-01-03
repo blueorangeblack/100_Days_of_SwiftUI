@@ -16,6 +16,10 @@ struct ContentView: View {
     @State private var errorMessage = ""
     @State private var showingError = false
     
+    @State private var heart = "❤️❤️❤️❤️❤️❤️"
+    @State private var score = 10
+    @State private var showingGameOver = false
+    
     var body: some View {
 
         NavigationView {
@@ -28,13 +32,28 @@ struct ContentView: View {
                 Section {
                     ForEach(usedWords, id: \.self) { word in
                         HStack {
-                            Image(systemName: "\(word.count).circle.fill")
+                            Image(systemName: "\(word.count).circle")
                             Text(word)
                         }
                     }
                 }
             }
             .navigationTitle(rootWord)
+            .toolbar(content: {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("\(heart)")
+                        .font(.caption)
+                }
+                ToolbarItem(placement: .principal) {
+                    Text("Score: \(score)")
+                        .font(.title)
+                        .minimumScaleFactor(0.5)
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Next Word", action: startGame)
+                        .foregroundColor(.brown)
+                }
+            })
             .onSubmit(addNewWord)
             .onAppear(perform: startGame)
             .alert(errorTitle, isPresented: $showingError) {
@@ -42,47 +61,70 @@ struct ContentView: View {
             } message: {
                 Text(errorMessage)
             }
+            .alert("The End", isPresented: $showingGameOver) {
+                Button("Replay", role: .cancel, action: replay)
+            } message: {
+                Text("Your score is \(score)")
+            }
         }
     }
     
+    //submit
     func addNewWord() {
         // 1. lowercase and trim the word, to make sure we don't add duplicate words with case differences
         // 소문자로 바꾸고 공백제거
         let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         
-        // 2. exit if the remaining string is empty
-        // 1자 이상인지 확인
-        guard answer.count > 0 else { return }
+        // 2. 세 글자 이상인지 확인
+        guard answer.count > 2 else {
+            wordError(title: "Word too short", message: "Word must be at least three letters")
+            calculate(isCorrect: false)
+            return
+        }
         
-        // 3. validation
+        // 3. rootWord와 다른지
+        guard answer != rootWord else {
+            wordError(title: "Same word", message: "Word must be different from '\(rootWord)'")
+            calculate(isCorrect: false)
+            return
+        }
+        
+        // 4. validation
         // 유효성 검사
         guard isOriginal(word: answer) else {
             wordError(title: "Word used already", message: "Be more original")
+            calculate(isCorrect: false)
             return
         }
 
         guard isPossible(word: answer) else {
             wordError(title: "Word not possible", message: "You can't spell that word from '\(rootWord)'!")
+            calculate(isCorrect: false)
             return
         }
 
         guard isReal(word: answer) else {
             wordError(title: "Word not recognized", message: "You can't just make them up, you know!")
+            calculate(isCorrect: false)
             return
         }
         
-        // 4. Insert that word at position 0 in the usedWords array
+        // 5. Insert that word at position 0 in the usedWords array
         // usedWords 배열의 가장 앞에 해당 단어 추가
         withAnimation {
             usedWords.insert(answer, at: 0)
         }
         
-        // 5. Set newWord back to be an empty string
+        // 6. Set newWord back to be an empty string
         //newWord 초기화
-        newWord = ""
+        calculate(isCorrect: true)
     }
     
+    //Next Word
     func startGame() {
+        usedWords = []
+        newWord = ""
+        
         // 1. Find the URL for start.txt in our app bundle
         // 번들에서 start.txt 찾기
         if let startWordsURL = Bundle.main.url(forResource: "start", withExtension: "txt") {
@@ -98,6 +140,8 @@ struct ContentView: View {
                 // 4. Pick one random word, or use "silkworm" as a sensible default
                 // 임의의 단어를 루트단어로 설정하기. 할 수 없다면 silkworm을 기본 값으로 설정
                 rootWord = allWords.randomElement() ?? "silkworm"
+                
+                calculate(isCorrect: false)
                 
                 // If we are here everything has worked, so we can exit
                 return
@@ -125,7 +169,6 @@ struct ContentView: View {
                 return false
             }
         }
-
         return true
     }
     
@@ -147,6 +190,27 @@ struct ContentView: View {
         errorTitle = title
         errorMessage = message
         showingError = true
+    }
+    
+    func calculate(isCorrect: Bool) {
+        if isCorrect {
+            score += 10
+            score += newWord.count
+            newWord = ""
+        } else {
+            heart.removeLast()
+            score -= 10
+        }
+        
+        if heart.count < 1 {
+            showingGameOver = true
+        }
+    }
+    
+    func replay() {
+        heart = "❤️❤️❤️❤️❤️❤️"
+        score = 10
+        startGame()
     }
 }
 
