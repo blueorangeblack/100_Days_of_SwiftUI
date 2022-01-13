@@ -7,129 +7,156 @@
 
 import SwiftUI
 
+struct CornerRotateModifier: ViewModifier {
+    let amount: Double
+    let anchor: UnitPoint
+    
+    func body(content: Content) -> some View {
+        content
+            .rotationEffect(.degrees(amount), anchor: anchor)
+            .clipped()
+    }
+}
+
+extension AnyTransition {
+    static var pivot: AnyTransition {
+        .modifier(
+            active: CornerRotateModifier(amount: -90, anchor: .topLeading),
+            identity: CornerRotateModifier(amount: 0, anchor: .topLeading)
+        )
+    }
+}
+
 struct ContentView: View {
-    /*
-    @State private var animationAmount = 1.0
-   
+    
+    // Building custom transitions using ViewModifier﻿
+    @State private var isShowingRed = false
+    
     var body: some View {
-        //⭐️Creating implicit animations
-        
-        /*
-        Button("Tap Me") {
-            animationAmount += 1
-        }
-        .padding(50)
-        .background(.red)
-        .foregroundColor(.white)
-        .clipShape(Circle())
-        .scaleEffect(animationAmount)
-        .blur(radius: (animationAmount - 1) * 3)
-        .animation(.default, value: animationAmount)
-        
-        //⭐️customizing animations
-        //.animation(.easeOut, value: animationAmount)
-        
-        //.animation(.interpolatingSpring(stiffness: 50, damping: 1), value: animationAmount)
-        
-        //duration
-        //.animation(.easeInOut(duration: 2), value: animationAmount)
-        
-        //delay
-        /*
-        .animation(
-            .easeInOut(duration: 2)
-                .delay(1),
-            value: animationAmount
-        )
-         */
-        
-        //repeat, autoreverse
-        /*
-        .animation(
-            .easeInOut(duration: 1)
-                .repeatCount(3, autoreverses: true),
-            value: animationAmount
-        )
-         */
-        
-        //repeatForever
-        .animation(
-            .easeInOut(duration: 1)
-                .repeatForever(autoreverses: true),
-            value: animationAmount
-        )
-         */
-        
-        /*
-        //.onAppear, .repeatForever
-        Button("animation") { }
-        .padding(50)
-        .background(.red)
-        .foregroundColor(.white)
-        .clipShape(Circle())
-        .overlay(
-            Circle()
-                .stroke(.red)
-                .scaleEffect(animationAmount)
-                .opacity(2 - animationAmount)
-                .animation(
-                    .easeInOut(duration: 1)
-                        .repeatForever(autoreverses: false),
-                    value: animationAmount
-                )
-        )
-        .onAppear {
-            animationAmount = 2
-        }
-         */
-        
-        /*
-        //⭐️animating bindings
-        print(animationAmount)
-        
-        return VStack {
+        ZStack {
+            Rectangle()
+                .fill(.blue)
+                .frame(width: 200, height: 200)
             
-            Stepper("Scale amount",value: $animationAmount.animation(
-                .easeInOut(duration: 1)
-                    .repeatCount(3, autoreverses: true)
-            ), in: 1...10)
-            
-            Spacer()
-            
-            Button("Tap Me") {
-                animationAmount += 1
+            if isShowingRed {
+                Rectangle()
+                    .fill(.red)
+                    .frame(width: 200, height: 200)
+                    .transition(.pivot)
             }
-            .padding(50)
-            .background(.red)
-            .foregroundColor(.white)
-            .clipShape(Circle())
-            .scaleEffect(animationAmount)
         }
-         */
+        .onTapGesture {
+            withAnimation {
+                isShowingRed.toggle()
+            }
+        }
+    }
+    
+    /*
+    // Controlling the animation stack
+    @State private var enabled = false
+    
+    var body: some View {
+        Button("Tap Me") {
+            enabled.toggle()
+        }
+        //1)
+//        .frame(width: 200, height: 200)
+//        .background(enabled ? .blue : .red)
+//        .foregroundColor(.white)
+//        .clipShape(RoundedRectangle(cornerRadius: enabled ? 60 : 0))
+//        .animation(.default, value: enabled)
+        
+        //2)
+        .frame(width: 200, height: 200)
+        .background(enabled ? .blue : .red)
+        //.animation(.default, value: enabled)
+        .animation(nil, value: enabled)
+        .foregroundColor(.white)
+        .clipShape(RoundedRectangle(cornerRadius: enabled ? 60 : 0))
+        .animation(.interpolatingSpring(stiffness: 10, damping: 1), value: enabled)
     }
     */
     
-    //⭐️explicit animations
-    @State private var animationAmount = 0.0
+    /*
+    // gesture
+    // implicit animations, explicit animations
+    @State private var dragAmount = CGSize.zero
     
     var body: some View {
-        
-        Button("Tap Me") {
-            /*
-            withAnimation {
-                animationAmount += 360
-            }
-             */
-            withAnimation(.interpolatingSpring(stiffness: 5, damping: 1)) {
-                animationAmount += 360
+        LinearGradient(gradient: Gradient(colors: [.yellow, .red]), startPoint: .topLeading, endPoint: .bottomTrailing)
+            .frame(width: 300, height: 200)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .offset(dragAmount)
+            .gesture(
+                DragGesture()
+                    .onChanged { dragAmount = $0.translation }
+                    //1)
+                    //.onEnded { _ in dragAmount = .zero }
+                    //3) explicit animations
+                    .onEnded { _ in
+                        withAnimation {
+                            dragAmount = .zero
+                        }
+                    }
+            )
+            //2) implicit animations
+            //.animation(.spring(), value: dragAmount)
+    }
+    */
+    
+    /*
+    //offset, delay
+    let letters = Array("Hello SwiftUI")
+    @State private var enabled = false
+    @State private var dragAmount = CGSize.zero
+    
+    var body: some View {
+        HStack(spacing: 0) {
+            ForEach(0..<letters.count) { num in
+                Text(String(letters[num]))
+                    .padding(5)
+                    .font(.title)
+                    .background(enabled ? .blue : .red)
+                    .offset(dragAmount)
+                    .animation(
+                        .default.delay(Double(num) / 20),
+                        value: dragAmount
+                    )
             }
         }
-        .padding(50)
-        .background(.red)
-        .foregroundColor(.white)
-        .clipShape(Circle())
-        .rotation3DEffect(.degrees(animationAmount), axis: (x: 0, y: 1, z: 0))
+        .gesture(
+            DragGesture()
+                .onChanged { dragAmount = $0.translation }
+                .onEnded { _ in
+                    dragAmount = .zero
+                    enabled.toggle()
+                }
+        )
     }
+    */
+    
+    /*
+    // Showing and hiding views with transitions﻿
+    @State private var isShowingRed = false
+    
+    var body: some View {
+        VStack {
+            Button("Tap Me") {
+                withAnimation {
+                    isShowingRed.toggle()
+                }
+            }
+            if isShowingRed {
+                Rectangle()
+                    .fill(.red)
+                    .frame(width: 200, height: 200)
+                    //.transition(.scale)
+                    .transition(.asymmetric(insertion: .scale, removal: .opacity))
+            }
+        }
+    }
+    */
 }
 
 struct ContentView_Previews: PreviewProvider {
